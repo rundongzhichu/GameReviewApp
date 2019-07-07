@@ -1,0 +1,34 @@
+body {
+    background: #333;
+}
+
+.ds-post-main {
+    position: relative;
+    width: 500px;
+}
+
+.ds-avatar {
+    position: absolute;
+    top: 20px;
+    width: 31px;
+    height: 31px;
+    padding: 5px;
+    background: #333;
+    border-radius: 50%;
+}
+
+.ds-avatar a {
+    display: block;
+    width: 31px;
+    height: 31px;
+    background: #01cc01;
+    border-radius: 50%;
+}
+
+.ds-comment-body {
+    margin-left: 20px;
+    padding: 10px 10px 10px 30px;
+    height: 80px;
+    background: #01644f;
+}
+

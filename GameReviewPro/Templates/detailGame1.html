@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>盗版豆瓣</title>
+    <meta name="keywords" content="盗版豆瓣">
+    <meta name="description" content="嘤嘤嘤狂吠">
+
+    <link rel="stylesheet" href="/Static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Static/css/style2.css">
+    <link rel="stylesheet" href="/Static/css/comment.css">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+    <script>
+        var islogin;
+        var username1;
+        var rating;
+
+
+        window.onload = function () {
+
+            // 打分机制
+            var clickIndex = -1;
+            //获取所有的img标签
+            var imgs = document.getElementsByName('img1');
+            //遍历所有图片对象,为每个图片注册指向事件
+            for (var index in imgs) {
+                imgs[index].onmouseover = function () {
+                    //将当前的及之前的图片变黄，之后的变为灰色
+                    var id = this.id;//获取当前元素的id
+                    for (var i = 0; i < imgs.length; i++) {
+                        //当前元素之前的元素
+                        if (i <= id) {
+                            //star2为黄色图片
+                            imgs[i].src = '/Static/image/yellowstar.png';
+                        }
+                        else {
+                            //当前元素之后的图片，颜色为灰色
+                            imgs[i].src = '/Static/image/graystar.png';
+                        }
+                    }
+                };
+                //为每个图片对象注册移开事件
+                imgs[index].onmouseout = function () {
+                    //被点击项之前的元素为黄色
+                    for (var i = 0; i <= clickIndex; i++) {
+                        imgs[i].src = '/Static/image/yellowstar.png';
+                    }
+                    for (var i = clickIndex + 1; i < imgs.length; i++) {
+                        //被点击项之后的元素为灰色
+                        imgs[i].src = '/Static/image/graystar.png';
+                    }
+                };
+                //为每个图片注册点击事件
+                imgs[index].onclick = function () {
+                    //记录下来被点的图片编号，编号与索引对应
+                    clickIndex = parseInt(this.id);
+                    rating = clickIndex + 1;
+                };
+            }
+
+
+
+            // 判断是否登录
+            var loc = location.href;
+            var judegement = loc.indexOf("userName");
+            //alert(judegement);
+
+            if (judegement >= 0) {
+                //获得home页面的username
+                var n1 = loc.length;
+                var n2 = loc.indexOf("=");
+                var n3 = loc.indexOf("&&");
+                username1 = decodeURI(loc.substr(n2 + 1, n3 - n2 - 1));
+                islogin = true;
+                //alert(username1);
+
+                //username1="123";
+                // 将username打印在右上角
+                document.getElementById("username1").innerHTML = username1;
+
+                // 显示logout
+                document.getElementById("regorlog").className = "";
+                var ele2 = document.getElementById("regorlog");
+                createEle(ele2, "/master", "注 销", "smoothScroll");
+            }
+            else {
+                islogin = false;
+                document.getElementById("username1").className = "";
+                var ele1 = document.getElementById("username1");
+                createEle(ele1, "/login", "登 录", "smoothScroll");
+
+                document.getElementById("regorlog").className = "";
+                var ele2 = document.getElementById("regorlog");
+                createEle(ele2, "/register", "注 册", "smoothScroll");
+
+            }
+
+            var post_data = {
+                "request": "post_data",
+            };
+
+            $.ajax({
+                url: '/detail',
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (!data["img"]) {
+                        alert("imgError!");
+                    }
+                    else {
+                        document.getElementById("gameimg").src = data["img"];
+                    }
+                    filldata("type");
+                    filldata("platform");
+                    filldata("alias");
+                    filldata("develops");
+                    filldata("publisher");
+                    filldata("date");
+                    filldata("introduction");
+                }
+            });
+
+            // 如果没有评论，隐藏该模块
+            var judge1 = document.getElementById("yiyou").innerHTML;
+            if (judge1 == "") {
+                document.getElementById("yiyou").style.visibility = "hidden";
+                document.getElementById("yiyou").style.display = "none";
+            }
+
+        }
+
+        function filldata(str) {
+            if (!data[str]) {
+                alert(str + "Error!");
+            }
+            else {
+                var span1 = document.getElementById(str);
+                var new1 = span1.innerHTML + data[str];
+                //span1.innerHTML = new1;
+                var length1 = judgelength(new1);
+                var new11 = cutstring(new1, length1, str);
+                span1.innerHTML = new11;
+            }
+        }
+
+        function cutstring(string, length, dttype) {
+            if (dttype == "introduction") {
+                if (length > 95) {
+                    string = string.substr(0, 94) + "...";
+                }
+            }
+            else if (length > 40) {
+                string = string.substr(0, 39) + "...";
+            }
+        }
+
+        function judgelength(string) {
+            var realLength = 0, len = string.length, charCode = -1;
+            for (var i = 0; i < len; i++) {
+                charCode = string.charCodeAt(i);
+                if (charCode >= 0 && charCode <= 128)
+                    realLength += 1;
+                else
+                    realLength += 2;
+            }
+            return realLength;
+        }
+
+        function createEle(ele, url, text, cla) {
+            var a = document.createElement("a");
+            a.href = url;
+            a.innerHTML = text;
+            //a.className = "smoothScroll";
+            ele.appendChild(a);
+        }
+
+
+
+
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                var csrftoken = getCookie('csrftoken');
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        function add() {
+            var content = $("te").value;
+            content = trim(content);
+
+            if (!islogin) {
+                alert("请先登录！");
+            }
+            else {
+                if (content.length < 1) {
+                    alert("请输入内容！");
+                    return;
+                }
+                            function postData() {
+                 $("te").value = "";
+                var myDate = new Date();
+                var year = myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+                var month = myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+                var day = myDate.getDate();
+                var hour = myDate.getHours();       //获取当前小时数(0-23)
+                var second = myDate.getMinutes();     //获取当前分钟数(0-59)
+                var minute = myDate.getSeconds();
+                var timeNow = year + "年" + (month + 1) + "月" + day + "日" + hour + "时" + second + "分" + minute + "秒";
+
+                // 在show框中加入一个NewDiv
+                var newDiv = document.createElement("div");
+                newDiv.className = "personal";
+                newDiv.id = "newDiv";
+                //newDiv.innerHTML = w;
+                var s = $("show");
+                $("show").appendChild(newDiv);
+
+                // 在newDiv中加入一个userdiv
+                var userdiv = document.createElement("div");
+                userdiv.className = "userdivClass";
+                userdiv.id = "userdiv";
+                newDiv.appendChild(userdiv);
+                var showuser = "<span class='showuser'>" + username1 + "</span>";
+                userdiv.innerHTML = showuser;
+
+                // 在newDiv中加入一个timediv
+                var timediv = document.createElement("div");
+                timediv.className = "timedivClass";
+                timediv.id = "timediv";
+                newDiv.appendChild(timediv);
+                var showtime = "<span>" + timeNow + "</span>";
+                timediv.innerHTML = showtime;
+
+                // 在newDiv中加入一个contentdiv
+                var contentdiv = document.createElement("div");
+                contentdiv.className = "contentdivClass";
+                contentdiv.id = "contentdiv";
+                newDiv.appendChild(contentdiv);
+                var showcontent = "<span>" + content + "</span>";
+                contentdiv.innerHTML = showcontent;
+
+
+
+
+                s.scrollTop = s.scrollHeight;//自动将滚动条拉到底部
+
+                var post_data = {
+                    "content": content,
+                    "username": username1,
+                    "date": timeNow,
+                    {#{ #待测试# }#}
+                "gameName": "{{ ""|add:gameS.gameName }}"
+                }
+                judge = true
+                // 发送给服务器
+                $.ajax({
+                        {#{ #做一个专门存储用户评论的函数# }#}
+                        url: {% url "storeReview" %},
+                        type: "POST",
+                        data: post_data,
+                        success: function (data) {
+                        {#{ #data = JSON.parse(data); # }#}
+                                            {#data = JSON.parse(data);#}
+                        if (data["status"] == 400) {
+                            judge=false;
+                            console.log("注册失败"+data["status"]);
+                        } else {
+                            judge=true;
+                            console.log("注册成功"+data["status"]);
+                        }
+                    },
+                    async : false
+                    });
+                }
+            }
+
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+        function trim(str) { //删除左右两端的空格
+            return str.replace(/(^\s*)|(\s*$)/g, "");
+        }
+        }
+
+
+         function function2() {
+
+             // 判断是否登录
+            var loc = location.href;
+            var judegement = loc.indexOf("userName");
+            //alert(judegement);
+
+             if (judegement >= 0) {
+                  var post_data = {
+                "rating": rating,
+            }
+
+            // 发送给服务器
+            $.ajax({
+                url: {% url 'rating' %},
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    {#data = JSON.parse(data);#}
+                    console.log(data['msg']);
+
+                }
+            });
+
+
+        var parent1 = document.getElementById("scorep");
+        var child1 = document.getElementById("scorec");
+        parent1.removeChild(child1);
+
+        // scorep中创建新的div
+        var resultSpan = document.createElement("span");
+        resultSpan.id = "resultSpan";
+        resultSpan.innerHTML = "<br><br>感谢您的评分" + "<br>" + "您的评分是" + rating + "星";
+        parent1.appendChild(resultSpan);
+            }
+            else{
+                 alert("请先登录！");
+             }
+
+        }
+
+
+    </script>
+
+
+</head>
+
+<body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+
+    <!-- Navigation section
+================================================== -->
+    <section class="navbar navbar-fixed-top custom-navbar" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon icon-bar"></span>
+                    <span class="icon icon-bar"></span>
+                    <span class="icon icon-bar"></span>
+                </button>
+                <p class="smoothScroll navbar-brand">抖瓣</p>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li><a href= "/master" class="smoothScroll">HOME</a></li>
+
+                    <li id="username1" class="usernamestyle"></li>
+                    <li id="regorlog" class="usernamestyle"></li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- information section
+================================================== -->
+    <section id="portfolio" class="parallax-section">
+        <div class="container">
+
+            <div class="row">
+                <!-- Section title
+        ================================================== -->
+                <div class="GameName">
+                    <h3>{{ gameS.gameName }}</h3>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="grid">
+                        <figure class="effect-zoe">
+
+
+
+
+
+
+
+                            {#         从后端获取URL                   #}
+                            <img src="{{ gameS.image }}" alt="portfolio img" id="gameimg" />
+                        </figure>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-md-4 col-sm-6">
+                    <br>
+                    <span class="dt" id="type">
+                        类型：{{ gameS.type }}
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="platform">
+                        平台：{{ gameS.platform }}
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="alias">
+                        别名：{{ gameD.otherName }}
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="develops">
+
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="publisher">
+                        发行商：{{ gameD.issuer }}
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="date">
+                        发行日期：{{ gameD.publishTime }}
+                    </span>
+
+                    <br><br>
+                    <span class="dt" id="introduction">
+                        简介：{{ gameD.intruction }}
+                    </span>
+
+                </div>
+
+
+                <div class="col-md-4 col-sm-6">
+<div class="grid" id="scorep">
+                        <div id="scorec">
+                            <div>
+                                <span>评分</span>
+                            </div>
+                            <br>
+                            <div>
+                                <img name="img1" id="0" src="/Static/image/graystar.png" />
+                                <img name="img1" id="1" src="/Static/image/graystar.png" />
+                                <img name="img1" id="2" src="/Static/image/graystar.png" />
+                                <img name="img1" id="3" src="/Static/image/graystar.png" />
+                                <img name="img1" id="4" src="/Static/image/graystar.png" />
+                            </div>
+                            <br>
+                            <div>
+                                <input type="submit" value="提交评分" onclick="function2()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- information section
+================================================== -->
+    <section>
+        <div class="shortcomment">
+            <h3>精彩短评</h3>
+        </div>
+
+        <div id="talk">
+
+            <div id="write">
+                <textArea id="te" placeholder="说点什么吧..." style="margin: auto auto; width:100%;height:70%;"></textArea>
+                <input type="button" value="发布" class="btn" onclick="add()">
+            </div>
+
+
+            <div id="show">
+                {% for gamer in gameR %}
+                    <div class="yiyoupersonal">
+                        <div class="yiyouuserdivClass">
+                            <span id="yiyou" class='showuser'>{{ gamer.userId_id }}</span>
+                        </div>
+                        <div class="yiyoutimedivClass">
+                            <span>{{ gamer.date }}</span>
+                        </div>
+                        <div class="yiyoucontentdivClass">
+                            <span>{{ gamer.reviewInfo }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- Footer section
+================================================== -->
+    <footer>
+        <div class="row">
+            <p>made with our true heart</p><img src='/Static/image/炮姐.jpg' width=52.0px height='52.0px'>
+            <p>Copyright &copy; MoyeMio </p>
+        </div>
+    </footer>
+
+
+
+</body>
+
+</html>

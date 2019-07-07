@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+
+    <title>登录</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="keywords" content="盗版豆瓣">
+    <meta name="description" content="嘤嘤狂吠嘤">
+
+    <link rel="stylesheet" type="text/css" href="/Static/css/login.css" />
+    <!--引入外部css文件-->
+
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+</head>
+
+<script type="text/javascript">
+    function delayURL(url){
+        var delay=document.getElementById("Time").innerHTML;
+        if(delay>0){
+            delay--;
+            document.getElementById("Time").innerHTML=delay;
+        }else{
+            window.top.location.href=url;
+            console.log(window.top.location.href);
+        }
+    }
+</script>
+
+
+<body class="login">
+
+    <div class="loginpanel">
+
+        <form class="form1" role="form">
+            <strong>
+                <font size=6>
+                    <p class="p1">
+                        注册成功！
+                    </p>
+
+                    <p id="Time" font-weight: 700;>3</p>
+                </font>
+            </strong>
+            <script type="text/javascript">
+                 delayURL("/master");
+            </script>
+        </form>
+
+        <form class="form2" role="form">
+            <div class="login-footer">
+                &copy; MoyeMio
+            </div>
+        </form>
+
+    </div>
+      <script language=javascript>
+          var url = '/master';
+          setTimeout("delayURL('"+url+"')",1000);
+          setTimeout("delayURL('"+url+"')",2000);
+          setTimeout("delayURL('"+url+"')",3000);
+          setTimeout('window.location="http://localhost:8000/master/"',3000);
+      </script>
+
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+#talk {
+    margin: 0 auto;
+    width: 1170PX;
+    height: 536px;
+    border: 0px red solid;
+}
+
+#show {
+    width: 98%;
+    height: 67%;
+    border-top: 1.5px solid rgba(0, 0, 0, 0.6);
+    margin: 10px auto auto;
+    overflow-y: auto;
+}
+
+#write {
+    width: 98%;
+    height: 28%;
+    border: 1px rgba(0, 0, 200, 0.3) solid;
+    margin: 15px auto auto;
+}
+
+.btn {
+    width: 51px;
+    height: 26px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10px;
+    margin: 0px auto 15px 90%;
+}
+
+.personal {
+    width: 90%;
+    height: auto;
+    border-bottom: 1.5px solid rgba(102,175,233,0.3);
+    margin: 5px 10px 0px 10px;
+    overflow-y: auto;
+}
+
+.userdivClass {
+    margin: 5px auto 0px auto;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.contentdivClass {
+    margin: 0px auto 20px auto;
+    color: black;
+    border: 0px; 
+    padding: 0px; 
+    font-size: 15px
+}
+
+.timedivClass {
+    margin: 1px auto 5px auto;
+    color: rgba(0, 0, 0, 0.3);
+    border: 0px; 
+    padding: 0px; 
+    font-size: 5px;
+}
+
+.shortcomment {
+    width: 1146px;
+    margin: 0 auto 0 auto;
+    text-align: left
+}
+
+.yiyoupersonal {
+    width: 90%;
+    height: auto;
+    border-bottom: 1.5px solid rgba(102,175,233,0.3);
+    margin: 5px 10px 0px 10px;
+    overflow-y: auto;
+}
+
+.yiyouuserdivClass {
+    margin: 5px auto 0px auto;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.yiyoucontentdivClass {
+    margin: 0px auto 20px auto;
+    color: black;
+    border: 0px; 
+    padding: 0px; 
+    font-size: 15px
+}
+
+.yiyoutimedivClass {
+    margin: 1px auto 5px auto;
+    color: rgba(0, 0, 0, 0.3);
+    border: 0px; 
+    padding: 0px; 
+    font-size: 5px;
+}
